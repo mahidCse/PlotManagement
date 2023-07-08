@@ -1,0 +1,103 @@
+﻿@model RealState.Models.CustomerModels.CustomerViewModel
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+@section Styles{
+    <link href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.css" rel="stylesheet" />
+
+    <style>
+        th {
+            text-align: center;
+        }
+    </style>
+}
+
+<div class="container-fluid" style="width:max-content">
+    <div class="row pt-4">
+        <div class="card card-primary">
+            <!-- card-header -->
+            <div class="card-header">
+                <h3 class="card-title">All Customers</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- card-body -->
+            <div class="card-body">
+                <!--Edit And Delete-->
+                <!--/.Edit And Delete-->
+
+                <table id="tb" class="table table-bordered table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+
+    <!-- /.col -->
+</div>
+
+
+@section Scripts
+    {
+    <!-- DataTables -->
+    <script src="~/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+
+    <!-- page script -->
+    <script type="text/javascript">
+        $('#tb').DataTable({
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            ordering: false,
+
+            ajax: {
+                url: "/Customer/GetCustomers",
+                type: "GET",
+                data: function (data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (!data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
+                }
+            },
+
+            columnDefs: [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row) {
+                        return ` <button type="submit" class="btn btn-outline-success btn-sm" onclick="window.location.href='/Customer/Edit/${data}'" value=''>
+                                       <i class="fas fa-pencil-alt"></i>
+                                       Edit
+                                   </button>
+                                                           <button type="submit" class="ml-sm-2 btn btn-outline-danger btn-sm" onclick="window.location.href='/Customer/Delete/${data}'" value=''>
+                                     <i class="fas fa-minus-circle"></i>
+                                     Delete
+                                  </button>
+
+                                   `;
+                    }
+                }
+            ]
+        });
+
+        $(document).ready(function () {
+
+            $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+        });
+    </script>
+}

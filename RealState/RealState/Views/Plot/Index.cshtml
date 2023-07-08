@@ -1,0 +1,120 @@
+﻿@model RealState.Models.PlotModels.PlotViewModel
+
+@{
+    ViewData["Title"] = "Plots";
+}
+
+@section Styles{
+    <link href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+
+    <style>
+        th {
+            text-align: center;
+        }
+    </style>
+}
+
+<div class="container-fluid" style="width:max-content">
+    <div class="row pt-4">
+        <div class="card card-primary">
+            <!-- card-header -->
+            <div class="card-header">
+                <h3 class="card-title">All Plots</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- card-body -->
+            <div class="card-body">
+                <!--Edit And Delete-->
+
+                <table id="tb" class="table table-bordered table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Plot Number</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+
+    <!-- /.col -->
+</div>
+
+
+@section Scripts
+    {
+    <!-- DataTables -->
+    <script src="~/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+
+
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- page script -->
+    <script type="text/javascript">
+        $('#tb').DataTable({
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            ordering: false,
+
+            ajax: {
+                url: "Plot/GetPlots",
+                type: "GET",
+                data: function (data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (!data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
+                }
+            },
+
+            columnDefs: [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row) {
+                        return ` <button type="submit" class="btn btn-outline-success btn-sm" onclick="window.location.href='/PlotBooking/Add/${data}'" value=''>
+                                                                       <i class="fas fa-check"></i>
+                                                               Confirm
+                                                           </button>
+                                         `;
+                    }
+                }
+            ]
+        });
+
+        $(document).ready(function () {
+
+            $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+        });
+    </script>
+}

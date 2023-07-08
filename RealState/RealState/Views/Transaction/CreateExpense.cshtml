@@ -1,0 +1,106 @@
+﻿@model RealState.Models.TransactionModels.TransactionModel
+@{
+    ViewData["Title"] = "Create Expense";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+}
+
+<div class="container-fluid">
+    <div class="row py-4 pl-5">
+        <div class="col-lg-11">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h2 class="card-title">Create a new Expense</h2>
+                </div>
+                <form method="post" asp-action="CreateExpense" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Account</label>
+                                <select asp-for="AccountId" class="form-control" id="account">
+                                    <option>--Select--</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Category</label>
+                                <select asp-for="CategoryId" class="form-control" id="category">
+                                    <option>--Select--</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="Amount" class="control-label">Amount</label>
+                                <input asp-for="Amount" type="number" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Date" class="control-label">Date and time</label>
+                                <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
+                                    <input type="datetime" asp-for="Date" class="form-control datetimepicker-input" data-target="#reservationdatetime" />
+                                    <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+@*                         <div class="form-group col-md-6">
+                                <label asp-for="Date" class="control-label">Date and time</label>
+                                <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
+                                    <input type="datetime-local" name="Date" id="dateTaken" class="form-control" />
+                                </div>
+
+                            </div>*@
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="ImageFile" class="control-label">File</label>
+                                <div class="col-12 p-0">
+                                    <input asp-for="ImageFile" type="file" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+
+                                <label asp-for="Description" class="control-label col-12">Description</label>
+                                <textarea asp-for="Description" class="control-label col-12" style="line-height:1"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script src="~/js/transaction.js"></script>
+
+    <script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <script>
+
+        //Date and time picker
+        $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' }, format: 'MM/DD/YYYY hh:mm A' });
+
+        let now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        let dateTime = now.getMonth() + 1 + '/' + now.getDate() + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ' ' + ampm;
+        console.log(dateTime)
+        document.getElementById('Date').value = dateTime;
+
+    </script>
+}

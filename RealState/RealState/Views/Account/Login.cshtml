@@ -1,0 +1,81 @@
+﻿@model LoginModel
+@{
+    ViewData["Title"] = "RealState | Sign Up";
+    Layout = "_AccountLayout";
+}
+
+
+
+@section Styles{
+
+    <style>
+        .login-popup {
+            border-radius: 10px;
+            position: relative;
+            padding-top: 10%;
+            opacity: 0.8;
+        }
+
+        .login-body {
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
+
+}
+
+<div class="login-popup row">
+    <div class="col-lg-5 m-lg-auto">
+        <div class="card mt-4">
+            <div class="login-card-body p-lg-5">
+
+                <form id="account" method="post">
+                    <p class="card-title col-md-8 offset-2">Sign in to start your session</p>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="input-group pb-2 col-md-8 offset-2">
+                        <input type="email" asp-for="Email" class="form-control" placeholder="Enter Email" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group pb-2 col-md-8 offset-2">
+                        <input type="password" asp-for="Password" class="form-control" placeholder="Enter Password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col-md-4 offset-4">
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.login-card-body -->
+<!--</div>
+    </div>
+</div>-->
+<!-- /.login-box -->
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).on('click', '#remember', function () {
+            if ($(this).is(':checked')) {
+                $(this).val(true);
+            }
+            else {
+                $(this).val(false);
+            }
+        });
+
+    </script>
+
+
+}

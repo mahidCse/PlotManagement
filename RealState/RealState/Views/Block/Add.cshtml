@@ -1,0 +1,71 @@
+﻿@model RealState.Models.BlockModels.BlockModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h4 style="padding:20px 10px;">Create Block</h4>
+<hr />
+
+<div class="container-fluid">
+    <div class="row py-4 pl-5">
+        <div class="col-lg-11">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h2 class="card-title">CreateBlock</h2>
+                </div>
+                <form asp-action="Add">
+                    @Html.AntiForgeryToken()
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="City" class="control-label"></label>
+                                <input asp-for="City" class="form-control" />
+                                <span asp-validation-for="City" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+                                <label asp-for="NumPlots" class="control-label"></label>
+                                <input asp-for="NumPlots" class="form-control" />
+                                <span asp-validation-for="NumPlots" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PlotPrice" class="control-label"></label>
+                                <input asp-for="PlotPrice" class="form-control" />
+                                <span asp-validation-for="PlotPrice" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label asp-for="Description" class="control-label"></label>
+                                <input asp-for="Description" class="form-control" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

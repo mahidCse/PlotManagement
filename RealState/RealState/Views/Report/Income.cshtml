@@ -1,0 +1,147 @@
+﻿@model RealState.Models.TransactionModels.TransactionModel
+@{
+    ViewData["Title"] = "View Income";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+    <style>
+
+    </style>
+
+}
+
+<div class="container-fluid">
+    <div class="card card-info" style="font-size:15px;">
+        <div class="card-header">
+            <p>Total Income List</p>
+        </div>
+        <div class="card-body ">
+
+            <div class="from-group row">
+                <div class=" col-md-4">
+                    <label class="col-sm-4 control-label">Category:</label>
+                    <select asp-for="CategoryId" class="col-sm-6 form-control-sm" id="category">
+                        <option>--Select--</option>
+                    </select>
+                </div>
+                <div class="row col-md-8">
+                    <div class="form-group col-md-6">
+                        <label class="col-sm-4">From date:</label>
+                        <input type="date" id="min" class="col-sm-6 form-control-sm" name="min">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class ="col-sm-4">To date:</label>
+                        <input type="date" id="max" class="col-sm-6 form-control-sm" name="max">
+                    </div>
+                </div>
+            </div>
+
+
+            <table class="mt-3 table table-responsive-sm table-bordered" id="tb">
+                <thead class="table-info">
+                    <tr>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Time
+                        </th>
+                        <th>
+                            Account
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <p id="total"> Total income = 0</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/transaction.js"></script>
+    <script>
+
+        $('#category').change(function () {
+
+            // change from and to date input
+            var inputFrom = document.getElementById("min");
+            var inputTo = document.getElementById("max");
+            var optionSelected = $(this).find("option:selected");
+            var valueSelected = optionSelected.val();
+            var totalIncome = 0;
+            $.ajax({
+                type: "GET",
+                url: "/Transaction/GetIncomeByCategory",
+                data: { id: valueSelected },
+                success: function (data) {
+                    var tableBody = $('#tb tbody');
+                    tableBody.empty();
+                    $.each(data, function (index, item) {
+                        $.each(item, function (index, col) {
+                            var row = '<tr><td>' + col[0] + '</td><td>' + col[1] + '</td><td>' + col[2] + '</td><td>' + col[3] + '</td></tr>';
+                            totalIncome = totalIncome + parseInt(col[0]);
+                            tableBody.append(row);
+                        });
+                    });
+                    var p = document.getElementById("total")
+                    p.innerText = " Total income = " + calcuateTotal();
+                }
+            });
+        });
+
+        $('#min, #max').change(function () {
+            var inputFrom = document.getElementById("min");
+            var inputTo = document.getElementById("max");
+
+            var table = document.getElementById("tb");
+            var rows = table.getElementsByTagName("tr");
+            var fromDate = new Date(inputFrom.value).getTime();
+
+            var toDate = new Date(inputTo.value).getTime();
+
+            // if to date is not set
+            if (!inputTo.value) {
+                toDate = new Date().getTime();
+            }
+
+            for (var i = 0; i < rows.length; i++) {
+                var cell = rows[i].getElementsByTagName("td")[1];
+                if (cell) {
+                    var date = new Date(cell.textContent).getTime();
+                    if (date >= fromDate && date <= toDate) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+
+            var p = document.getElementById("total")
+            p.innerText = " Total income = " + calcuateTotal();
+
+        });
+
+        function calcuateTotal() {
+            var totalIncome = 0;
+            var table = document.getElementById("tb");
+            var rows = table.getElementsByTagName("tr");
+
+            for (var i = 1; i < rows.length; i++) {
+                if ($(rows[i]).css('display') !== 'none') {
+                    var cell = rows[i].getElementsByTagName("td");
+                    totalIncome = totalIncome + parseFloat($(cell[0]).text());
+                }
+            }
+            console.log(totalIncome)
+            return totalIncome;
+        }
+    </script>
+}
